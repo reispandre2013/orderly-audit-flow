@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 
-export const Route = createFileRoute("/_app/ordens/nova")({
+export const Route = createFileRoute("/app/ordens/nova")({
   head: () => ({ meta: [{ title: "Nova ordem — SisPão Público" }] }),
   component: NovaOrdemPage,
 });

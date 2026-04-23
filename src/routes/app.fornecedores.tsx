@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { EmptyState } from "@/components/empty-state";
 
-export const Route = createFileRoute("/_app/fornecedores")({
+export const Route = createFileRoute("/app/fornecedores")({
   head: () => ({ meta: [{ title: "Fornecedores — SisPão Público" }] }),
   component: () => (
     <div>

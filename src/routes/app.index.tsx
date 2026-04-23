@@ -7,7 +7,7 @@ import { EmptyState } from "@/components/empty-state";
 import { useAuth } from "@/lib/auth/auth-context";
 import { ROLE_LABEL } from "@/lib/domain/roles";
 
-export const Route = createFileRoute("/_app/")({
+export const Route = createFileRoute("/app/")({
   head: () => ({ meta: [{ title: "Dashboard — SisPão Público" }] }),
   component: DashboardPage,
 });

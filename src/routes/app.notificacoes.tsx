@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { EmptyState } from "@/components/empty-state";
 
-export const Route = createFileRoute("/_app/notificacoes")({
+export const Route = createFileRoute("/app/notificacoes")({
   head: () => ({ meta: [{ title: "Notificações — SisPão Público" }] }),
   component: () => (
     <div>
