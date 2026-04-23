@@ -31,6 +31,7 @@ import { Route as AppAuditoriaRouteImport } from './routes/app.auditoria'
 import { Route as AppAprovacoesRouteImport } from './routes/app.aprovacoes'
 import { Route as AppOrdensIndexRouteImport } from './routes/app.ordens.index'
 import { Route as AppOrdensNovaRouteImport } from './routes/app.ordens.nova'
+import { Route as AppOrdensOrdemIdRouteImport } from './routes/app.ordens.$ordemId'
 
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
@@ -142,6 +143,11 @@ const AppOrdensNovaRoute = AppOrdensNovaRouteImport.update({
   path: '/ordens/nova',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOrdensOrdemIdRoute = AppOrdensOrdemIdRouteImport.update({
+  id: '/ordens/$ordemId',
+  path: '/ordens/$ordemId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/app/relatorios': typeof AppRelatoriosRoute
   '/app/usuarios': typeof AppUsuariosRoute
   '/app/': typeof AppIndexRoute
+  '/app/ordens/$ordemId': typeof AppOrdensOrdemIdRoute
   '/app/ordens/nova': typeof AppOrdensNovaRoute
   '/app/ordens/': typeof AppOrdensIndexRoute
 }
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/app/relatorios': typeof AppRelatoriosRoute
   '/app/usuarios': typeof AppUsuariosRoute
   '/app': typeof AppIndexRoute
+  '/app/ordens/$ordemId': typeof AppOrdensOrdemIdRoute
   '/app/ordens/nova': typeof AppOrdensNovaRoute
   '/app/ordens': typeof AppOrdensIndexRoute
 }
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/app/relatorios': typeof AppRelatoriosRoute
   '/app/usuarios': typeof AppUsuariosRoute
   '/app/': typeof AppIndexRoute
+  '/app/ordens/$ordemId': typeof AppOrdensOrdemIdRoute
   '/app/ordens/nova': typeof AppOrdensNovaRoute
   '/app/ordens/': typeof AppOrdensIndexRoute
 }
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/app/relatorios'
     | '/app/usuarios'
     | '/app/'
+    | '/app/ordens/$ordemId'
     | '/app/ordens/nova'
     | '/app/ordens/'
   fileRoutesByTo: FileRoutesByTo
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/app/relatorios'
     | '/app/usuarios'
     | '/app'
+    | '/app/ordens/$ordemId'
     | '/app/ordens/nova'
     | '/app/ordens'
   id:
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/app/relatorios'
     | '/app/usuarios'
     | '/app/'
+    | '/app/ordens/$ordemId'
     | '/app/ordens/nova'
     | '/app/ordens/'
   fileRoutesById: FileRoutesById
@@ -453,6 +465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppOrdensNovaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/ordens/$ordemId': {
+      id: '/app/ordens/$ordemId'
+      path: '/ordens/$ordemId'
+      fullPath: '/app/ordens/$ordemId'
+      preLoaderRoute: typeof AppOrdensOrdemIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -472,6 +491,7 @@ interface AppRouteChildren {
   AppRelatoriosRoute: typeof AppRelatoriosRoute
   AppUsuariosRoute: typeof AppUsuariosRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppOrdensOrdemIdRoute: typeof AppOrdensOrdemIdRoute
   AppOrdensNovaRoute: typeof AppOrdensNovaRoute
   AppOrdensIndexRoute: typeof AppOrdensIndexRoute
 }
@@ -492,6 +512,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppRelatoriosRoute: AppRelatoriosRoute,
   AppUsuariosRoute: AppUsuariosRoute,
   AppIndexRoute: AppIndexRoute,
+  AppOrdensOrdemIdRoute: AppOrdensOrdemIdRoute,
   AppOrdensNovaRoute: AppOrdensNovaRoute,
   AppOrdensIndexRoute: AppOrdensIndexRoute,
 }
@@ -508,3 +529,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
