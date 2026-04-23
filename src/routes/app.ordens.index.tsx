@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { EmptyState } from "@/components/empty-state";
 
-export const Route = createFileRoute("/_app/ordens/")({
+export const Route = createFileRoute("/app/ordens/")({
   head: () => ({ meta: [{ title: "Ordens de compra — SisPão Público" }] }),
   component: OrdensPage,
 });

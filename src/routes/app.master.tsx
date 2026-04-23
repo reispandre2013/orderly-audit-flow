@@ -5,7 +5,7 @@ import { SectionCard } from "@/components/section-card";
 import { EmptyState } from "@/components/empty-state";
 import { KPICard } from "@/components/kpi-card";
 
-export const Route = createFileRoute("/_app/master")({
+export const Route = createFileRoute("/app/master")({
   head: () => ({ meta: [{ title: "Painel Master — SisPão Público" }] }),
   component: () => (
     <div>

@@ -9,38 +9,324 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppUsuariosRouteImport } from './routes/app.usuarios'
+import { Route as AppRelatoriosRouteImport } from './routes/app.relatorios'
+import { Route as AppProdutosRouteImport } from './routes/app.produtos'
+import { Route as AppProducaoRouteImport } from './routes/app.producao'
+import { Route as AppPerfilRouteImport } from './routes/app.perfil'
+import { Route as AppOrgaosRouteImport } from './routes/app.orgaos'
+import { Route as AppNotificacoesRouteImport } from './routes/app.notificacoes'
+import { Route as AppMasterRouteImport } from './routes/app.master'
+import { Route as AppFornecedoresRouteImport } from './routes/app.fornecedores'
+import { Route as AppFinanceiroRouteImport } from './routes/app.financeiro'
+import { Route as AppEstoqueRouteImport } from './routes/app.estoque'
+import { Route as AppDocumentosRouteImport } from './routes/app.documentos'
+import { Route as AppAuditoriaRouteImport } from './routes/app.auditoria'
+import { Route as AppAprovacoesRouteImport } from './routes/app.aprovacoes'
+import { Route as AppOrdensIndexRouteImport } from './routes/app.ordens.index'
+import { Route as AppOrdensNovaRouteImport } from './routes/app.ordens.nova'
 
+const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
+  id: '/recuperar-senha',
+  path: '/recuperar-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUsuariosRoute = AppUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRelatoriosRoute = AppRelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProdutosRoute = AppProdutosRouteImport.update({
+  id: '/produtos',
+  path: '/produtos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProducaoRoute = AppProducaoRouteImport.update({
+  id: '/producao',
+  path: '/producao',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPerfilRoute = AppPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOrgaosRoute = AppOrgaosRouteImport.update({
+  id: '/orgaos',
+  path: '/orgaos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificacoesRoute = AppNotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMasterRoute = AppMasterRouteImport.update({
+  id: '/master',
+  path: '/master',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFornecedoresRoute = AppFornecedoresRouteImport.update({
+  id: '/fornecedores',
+  path: '/fornecedores',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEstoqueRoute = AppEstoqueRouteImport.update({
+  id: '/estoque',
+  path: '/estoque',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentosRoute = AppDocumentosRouteImport.update({
+  id: '/documentos',
+  path: '/documentos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAuditoriaRoute = AppAuditoriaRouteImport.update({
+  id: '/auditoria',
+  path: '/auditoria',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAprovacoesRoute = AppAprovacoesRouteImport.update({
+  id: '/aprovacoes',
+  path: '/aprovacoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOrdensIndexRoute = AppOrdensIndexRouteImport.update({
+  id: '/ordens/',
+  path: '/ordens/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOrdensNovaRoute = AppOrdensNovaRouteImport.update({
+  id: '/ordens/nova',
+  path: '/ordens/nova',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/app/aprovacoes': typeof AppAprovacoesRoute
+  '/app/auditoria': typeof AppAuditoriaRoute
+  '/app/documentos': typeof AppDocumentosRoute
+  '/app/estoque': typeof AppEstoqueRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/fornecedores': typeof AppFornecedoresRoute
+  '/app/master': typeof AppMasterRoute
+  '/app/notificacoes': typeof AppNotificacoesRoute
+  '/app/orgaos': typeof AppOrgaosRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/app/producao': typeof AppProducaoRoute
+  '/app/produtos': typeof AppProdutosRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/usuarios': typeof AppUsuariosRoute
+  '/app/': typeof AppIndexRoute
+  '/app/ordens/nova': typeof AppOrdensNovaRoute
+  '/app/ordens/': typeof AppOrdensIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/app/aprovacoes': typeof AppAprovacoesRoute
+  '/app/auditoria': typeof AppAuditoriaRoute
+  '/app/documentos': typeof AppDocumentosRoute
+  '/app/estoque': typeof AppEstoqueRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/fornecedores': typeof AppFornecedoresRoute
+  '/app/master': typeof AppMasterRoute
+  '/app/notificacoes': typeof AppNotificacoesRoute
+  '/app/orgaos': typeof AppOrgaosRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/app/producao': typeof AppProducaoRoute
+  '/app/produtos': typeof AppProdutosRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/usuarios': typeof AppUsuariosRoute
+  '/app': typeof AppIndexRoute
+  '/app/ordens/nova': typeof AppOrdensNovaRoute
+  '/app/ordens': typeof AppOrdensIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/app/aprovacoes': typeof AppAprovacoesRoute
+  '/app/auditoria': typeof AppAuditoriaRoute
+  '/app/documentos': typeof AppDocumentosRoute
+  '/app/estoque': typeof AppEstoqueRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/fornecedores': typeof AppFornecedoresRoute
+  '/app/master': typeof AppMasterRoute
+  '/app/notificacoes': typeof AppNotificacoesRoute
+  '/app/orgaos': typeof AppOrgaosRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/app/producao': typeof AppProducaoRoute
+  '/app/produtos': typeof AppProdutosRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/usuarios': typeof AppUsuariosRoute
+  '/app/': typeof AppIndexRoute
+  '/app/ordens/nova': typeof AppOrdensNovaRoute
+  '/app/ordens/': typeof AppOrdensIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/cadastro'
+    | '/login'
+    | '/recuperar-senha'
+    | '/app/aprovacoes'
+    | '/app/auditoria'
+    | '/app/documentos'
+    | '/app/estoque'
+    | '/app/financeiro'
+    | '/app/fornecedores'
+    | '/app/master'
+    | '/app/notificacoes'
+    | '/app/orgaos'
+    | '/app/perfil'
+    | '/app/producao'
+    | '/app/produtos'
+    | '/app/relatorios'
+    | '/app/usuarios'
+    | '/app/'
+    | '/app/ordens/nova'
+    | '/app/ordens/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/cadastro'
+    | '/login'
+    | '/recuperar-senha'
+    | '/app/aprovacoes'
+    | '/app/auditoria'
+    | '/app/documentos'
+    | '/app/estoque'
+    | '/app/financeiro'
+    | '/app/fornecedores'
+    | '/app/master'
+    | '/app/notificacoes'
+    | '/app/orgaos'
+    | '/app/perfil'
+    | '/app/producao'
+    | '/app/produtos'
+    | '/app/relatorios'
+    | '/app/usuarios'
+    | '/app'
+    | '/app/ordens/nova'
+    | '/app/ordens'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/cadastro'
+    | '/login'
+    | '/recuperar-senha'
+    | '/app/aprovacoes'
+    | '/app/auditoria'
+    | '/app/documentos'
+    | '/app/estoque'
+    | '/app/financeiro'
+    | '/app/fornecedores'
+    | '/app/master'
+    | '/app/notificacoes'
+    | '/app/orgaos'
+    | '/app/perfil'
+    | '/app/producao'
+    | '/app/produtos'
+    | '/app/relatorios'
+    | '/app/usuarios'
+    | '/app/'
+    | '/app/ordens/nova'
+    | '/app/ordens/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  CadastroRoute: typeof CadastroRoute
+  LoginRoute: typeof LoginRoute
+  RecuperarSenhaRoute: typeof RecuperarSenhaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/recuperar-senha': {
+      id: '/recuperar-senha'
+      path: '/recuperar-senha'
+      fullPath: '/recuperar-senha'
+      preLoaderRoute: typeof RecuperarSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +334,186 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/usuarios': {
+      id: '/app/usuarios'
+      path: '/usuarios'
+      fullPath: '/app/usuarios'
+      preLoaderRoute: typeof AppUsuariosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/relatorios': {
+      id: '/app/relatorios'
+      path: '/relatorios'
+      fullPath: '/app/relatorios'
+      preLoaderRoute: typeof AppRelatoriosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/produtos': {
+      id: '/app/produtos'
+      path: '/produtos'
+      fullPath: '/app/produtos'
+      preLoaderRoute: typeof AppProdutosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/producao': {
+      id: '/app/producao'
+      path: '/producao'
+      fullPath: '/app/producao'
+      preLoaderRoute: typeof AppProducaoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/perfil': {
+      id: '/app/perfil'
+      path: '/perfil'
+      fullPath: '/app/perfil'
+      preLoaderRoute: typeof AppPerfilRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/orgaos': {
+      id: '/app/orgaos'
+      path: '/orgaos'
+      fullPath: '/app/orgaos'
+      preLoaderRoute: typeof AppOrgaosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/notificacoes': {
+      id: '/app/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/app/notificacoes'
+      preLoaderRoute: typeof AppNotificacoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/master': {
+      id: '/app/master'
+      path: '/master'
+      fullPath: '/app/master'
+      preLoaderRoute: typeof AppMasterRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/fornecedores': {
+      id: '/app/fornecedores'
+      path: '/fornecedores'
+      fullPath: '/app/fornecedores'
+      preLoaderRoute: typeof AppFornecedoresRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/financeiro': {
+      id: '/app/financeiro'
+      path: '/financeiro'
+      fullPath: '/app/financeiro'
+      preLoaderRoute: typeof AppFinanceiroRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/estoque': {
+      id: '/app/estoque'
+      path: '/estoque'
+      fullPath: '/app/estoque'
+      preLoaderRoute: typeof AppEstoqueRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/documentos': {
+      id: '/app/documentos'
+      path: '/documentos'
+      fullPath: '/app/documentos'
+      preLoaderRoute: typeof AppDocumentosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/auditoria': {
+      id: '/app/auditoria'
+      path: '/auditoria'
+      fullPath: '/app/auditoria'
+      preLoaderRoute: typeof AppAuditoriaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/aprovacoes': {
+      id: '/app/aprovacoes'
+      path: '/aprovacoes'
+      fullPath: '/app/aprovacoes'
+      preLoaderRoute: typeof AppAprovacoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/ordens/': {
+      id: '/app/ordens/'
+      path: '/ordens'
+      fullPath: '/app/ordens/'
+      preLoaderRoute: typeof AppOrdensIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/ordens/nova': {
+      id: '/app/ordens/nova'
+      path: '/ordens/nova'
+      fullPath: '/app/ordens/nova'
+      preLoaderRoute: typeof AppOrdensNovaRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAprovacoesRoute: typeof AppAprovacoesRoute
+  AppAuditoriaRoute: typeof AppAuditoriaRoute
+  AppDocumentosRoute: typeof AppDocumentosRoute
+  AppEstoqueRoute: typeof AppEstoqueRoute
+  AppFinanceiroRoute: typeof AppFinanceiroRoute
+  AppFornecedoresRoute: typeof AppFornecedoresRoute
+  AppMasterRoute: typeof AppMasterRoute
+  AppNotificacoesRoute: typeof AppNotificacoesRoute
+  AppOrgaosRoute: typeof AppOrgaosRoute
+  AppPerfilRoute: typeof AppPerfilRoute
+  AppProducaoRoute: typeof AppProducaoRoute
+  AppProdutosRoute: typeof AppProdutosRoute
+  AppRelatoriosRoute: typeof AppRelatoriosRoute
+  AppUsuariosRoute: typeof AppUsuariosRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppOrdensNovaRoute: typeof AppOrdensNovaRoute
+  AppOrdensIndexRoute: typeof AppOrdensIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAprovacoesRoute: AppAprovacoesRoute,
+  AppAuditoriaRoute: AppAuditoriaRoute,
+  AppDocumentosRoute: AppDocumentosRoute,
+  AppEstoqueRoute: AppEstoqueRoute,
+  AppFinanceiroRoute: AppFinanceiroRoute,
+  AppFornecedoresRoute: AppFornecedoresRoute,
+  AppMasterRoute: AppMasterRoute,
+  AppNotificacoesRoute: AppNotificacoesRoute,
+  AppOrgaosRoute: AppOrgaosRoute,
+  AppPerfilRoute: AppPerfilRoute,
+  AppProducaoRoute: AppProducaoRoute,
+  AppProdutosRoute: AppProdutosRoute,
+  AppRelatoriosRoute: AppRelatoriosRoute,
+  AppUsuariosRoute: AppUsuariosRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppOrdensNovaRoute: AppOrdensNovaRoute,
+  AppOrdensIndexRoute: AppOrdensIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  CadastroRoute: CadastroRoute,
+  LoginRoute: LoginRoute,
+  RecuperarSenhaRoute: RecuperarSenhaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

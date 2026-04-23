@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { EmptyState } from "@/components/empty-state";
 
-export const Route = createFileRoute("/_app/documentos")({
+export const Route = createFileRoute("/app/documentos")({
   head: () => ({ meta: [{ title: "Anexos & Dossiês — SisPão Público" }] }),
   component: () => (
     <div>

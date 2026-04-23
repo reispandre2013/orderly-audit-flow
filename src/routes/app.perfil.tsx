@@ -5,7 +5,7 @@ import { SectionCard } from "@/components/section-card";
 import { RoleBadge } from "@/components/role-badge";
 import { formatCPF, formatPhone } from "@/lib/format";
 
-export const Route = createFileRoute("/_app/perfil")({
+export const Route = createFileRoute("/app/perfil")({
   head: () => ({ meta: [{ title: "Meu perfil — SisPão Público" }] }),
   component: PerfilPage,
 });

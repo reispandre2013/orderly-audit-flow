@@ -4,7 +4,7 @@ import { AppTopbar } from "@/components/app-topbar";
 import { useAuth } from "@/lib/auth/auth-context";
 import { Wheat } from "lucide-react";
 
-export const Route = createFileRoute("/_app")({
+export const Route = createFileRoute("/app")({
   component: AppLayout,
 });
 
