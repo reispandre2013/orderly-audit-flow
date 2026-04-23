@@ -8,6 +8,9 @@ export function formatCentavosToBRL(centavos: number): string {
   return BRL.format(centavos / 100);
 }
 
+/** Alias mais curto. */
+export const formatBRL = formatCentavosToBRL;
+
 export function formatDate(value: string | Date | null | undefined): string {
   if (!value) return "—";
   const d = typeof value === "string" ? new Date(value) : value;
