@@ -19,17 +19,21 @@ function PerfilPage() {
       <SectionCard title="Dados cadastrais">
         {user ? (
           <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
-            <Item label="Nome" value={user.full_name} />
-            <Item label="E-mail" value={user.email} />
-            <Item label="CPF" value={formatCPF(user.cpf)} />
-            <Item label="Matrícula" value={user.matricula} />
+            <Item label="Nome" value={user.full_name || "—"} />
+            <Item label="E-mail" value={user.email || "—"} />
+            <Item label="CPF" value={user.cpf ? formatCPF(user.cpf) : "—"} />
+            <Item label="Matrícula" value={user.matricula || "—"} />
             <Item label="Telefone" value={user.phone ? formatPhone(user.phone) : "—"} />
             <Item label="Departamento" value={user.departamento ?? "—"} />
             <Item label="Equipe" value={user.equipe ?? "—"} />
             <div>
               <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Perfis</dt>
               <dd className="mt-1 flex flex-wrap gap-1.5">
-                {user.roles.map((r) => <RoleBadge key={r} role={r} />)}
+                {user.roles.length > 0 ? (
+                  user.roles.map((r) => <RoleBadge key={r} role={r} />)
+                ) : (
+                  <span className="text-xs text-muted-foreground">Sem perfis atribuídos</span>
+                )}
               </dd>
             </div>
           </dl>
