@@ -10,7 +10,7 @@ import { StepItems } from "@/components/order-wizard/step-items";
 import { StepDelivery } from "@/components/order-wizard/step-delivery";
 import { StepReview } from "@/components/order-wizard/step-review";
 import { EMPTY_DRAFT, isStepValid, type OrderDraft } from "@/components/order-wizard/types";
-import { collectDeviceInfo } from "@/lib/device-info";
+import { collectClientAuditMeta } from "@/lib/device-info";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/ordens/nova")({
@@ -44,7 +44,7 @@ function NovaOrdemPage() {
 
   const handleSubmit = () => {
     // Captura metadados de auditoria — esta payload é o que será enviado ao Supabase.
-    const audit = collectDeviceInfo();
+    const audit = collectClientAuditMeta();
     const payload = { draft, audit };
     // eslint-disable-next-line no-console
     console.info("[ordem] payload pronto para criação no Supabase:", payload);
