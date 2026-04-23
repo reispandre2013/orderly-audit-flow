@@ -1,16 +1,18 @@
 /**
- * Contexto de autenticação.
+ * Contexto de autenticação — conectado ao Supabase.
  *
- * IMPORTANTE: a implementação atual usa um placeholder local (sem persistência
- * real) APENAS para permitir que o frontend seja construído antes da conexão
- * com Supabase. A API exposta (signIn, signUp, signOut, resetPassword) é a
- * definitiva — quando o Supabase for conectado, apenas a implementação interna
- * deste arquivo é trocada por chamadas a `supabase.auth.*`.
+ * Modelo de dados esperado no Postgres (a ser criado via migrations no Cursor):
+ *   - public.profiles  (id uuid PK = auth.users.id, full_name, email, cpf, ...)
+ *   - public.user_roles (user_id uuid FK auth.users.id, role app_role)
+ *   - enum public.app_role (ver src/lib/domain/roles.ts)
+ *   - função public.has_role(_user_id uuid, _role app_role) SECURITY DEFINER
  *
- * NÃO usar este contexto para decisões de segurança no servidor — RLS no
- * Postgres é a fonte de verdade.
+ * Enquanto o schema não existe no banco, signIn funciona mas o perfil/roles
+ * vêm vazios — a UI mostra mensagens apropriadas.
  */
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import type { Session } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase/client";
 import type { AppRole } from "@/lib/domain/roles";
 import type { UserWithRoles } from "@/lib/domain/types";
 
@@ -30,6 +32,7 @@ interface SignUpData {
 
 interface AuthContextValue {
   status: AuthStatus;
+  session: Session | null;
   user: UserWithRoles | null;
   /** Role primária do usuário (a primeira da lista). UI pode permitir trocar. */
   activeRole: AppRole | null;
@@ -44,85 +47,150 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const STORAGE_KEY = "sispao.session.v1";
+const ACTIVE_ROLE_KEY = "sispao.activeRole.v1";
 
-interface StoredSession {
-  user: UserWithRoles;
-  activeRole: AppRole;
-}
+/**
+ * Carrega o perfil + roles do usuário a partir das tabelas `profiles` e `user_roles`.
+ * Se as tabelas ainda não existem, devolve null sem quebrar a UI.
+ */
+async function loadUserWithRoles(userId: string, fallbackEmail: string): Promise<UserWithRoles | null> {
+  const [{ data: profile, error: profileErr }, { data: rolesData, error: rolesErr }] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+    supabase.from("user_roles").select("role").eq("user_id", userId),
+  ]);
 
-function loadSession(): StoredSession | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as StoredSession;
-  } catch {
-    return null;
+  // Tabelas ainda não existem — não bloqueia a sessão, apenas avisa.
+  if (profileErr || rolesErr) {
+    if (import.meta.env.DEV) {
+      console.warn("[auth] tabelas profiles/user_roles ainda não existem no Supabase", {
+        profileErr,
+        rolesErr,
+      });
+    }
+    return {
+      id: userId,
+      full_name: fallbackEmail,
+      email: fallbackEmail,
+      cpf: "",
+      matricula: "",
+      phone: null,
+      orgao_id: null,
+      fornecedor_id: null,
+      departamento: null,
+      equipe: null,
+      active: true,
+      created_at: new Date().toISOString(),
+      roles: [],
+    };
   }
-}
 
-function saveSession(session: StoredSession | null) {
-  if (typeof window === "undefined") return;
-  if (session) {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-  } else {
-    window.localStorage.removeItem(STORAGE_KEY);
-  }
+  if (!profile) return null;
+
+  return {
+    ...(profile as Omit<UserWithRoles, "roles">),
+    roles: (rolesData ?? []).map((r) => r.role as AppRole),
+  };
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus>("loading");
+  const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<UserWithRoles | null>(null);
   const [activeRole, setActiveRoleState] = useState<AppRole | null>(null);
 
   useEffect(() => {
-    const stored = loadSession();
-    if (stored) {
-      setUser(stored.user);
-      setActiveRoleState(stored.activeRole);
-      setStatus("authenticated");
-    } else {
-      setStatus("unauthenticated");
-    }
+    // 1) Listener PRIMEIRO (antes do getSession, para não perder o evento inicial).
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+      if (newSession?.user) {
+        // Defer para evitar deadlocks dentro do callback.
+        setTimeout(async () => {
+          const userWithRoles = await loadUserWithRoles(newSession.user.id, newSession.user.email ?? "");
+          setUser(userWithRoles);
+          if (userWithRoles?.roles.length) {
+            const stored = typeof window !== "undefined" ? window.localStorage.getItem(ACTIVE_ROLE_KEY) : null;
+            const next = stored && userWithRoles.roles.includes(stored as AppRole)
+              ? (stored as AppRole)
+              : userWithRoles.roles[0];
+            setActiveRoleState(next);
+          } else {
+            setActiveRoleState(null);
+          }
+          setStatus("authenticated");
+        }, 0);
+      } else {
+        setUser(null);
+        setActiveRoleState(null);
+        setStatus("unauthenticated");
+      }
+    });
+
+    // 2) Verifica sessão existente.
+    supabase.auth.getSession().then(({ data: { session: existing } }) => {
+      if (!existing) {
+        setStatus("unauthenticated");
+      }
+      // Se houver sessão, o onAuthStateChange acima cuidará do resto via INITIAL_SESSION.
+    });
+
+    return () => {
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   const setActiveRole = (role: AppRole) => {
     if (!user || !user.roles.includes(role)) return;
     setActiveRoleState(role);
-    saveSession({ user, activeRole: role });
+    if (typeof window !== "undefined") window.localStorage.setItem(ACTIVE_ROLE_KEY, role);
   };
 
   const hasRole = (role: AppRole) => user?.roles.includes(role) ?? false;
   const hasAnyRole = (roles: AppRole[]) => !!user && roles.some((r) => user.roles.includes(r));
 
-  /**
-   * Placeholder de signIn — a regra REAL ficará no Supabase.
-   * Aqui apenas valida formato e emite um aviso visual. Não há base de usuários.
-   */
-  const signIn: AuthContextValue["signIn"] = async () => {
-    return { error: "Autenticação ainda não está conectada. Habilite o Lovable Cloud ou conecte seu Supabase para ativar o login real." };
+  const signIn: AuthContextValue["signIn"] = async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    return { error: error?.message ?? null };
   };
 
-  const signUp: AuthContextValue["signUp"] = async () => {
-    return { error: "Cadastro ainda não está conectado. Habilite o Lovable Cloud ou conecte seu Supabase para ativar." };
+  const signUp: AuthContextValue["signUp"] = async (data) => {
+    const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/app` : undefined;
+    const { error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        emailRedirectTo: redirectTo,
+        // Estes campos vão para auth.users.raw_user_meta_data — um trigger no Postgres
+        // (a criar via migration) deve copiá-los para public.profiles.
+        data: {
+          full_name: data.full_name,
+          cpf: data.cpf,
+          matricula: data.matricula,
+          phone: data.phone,
+          orgao: data.orgao,
+          departamento: data.departamento,
+          equipe: data.equipe,
+        },
+      },
+    });
+    return { error: error?.message ?? null };
   };
 
-  const resetPassword: AuthContextValue["resetPassword"] = async () => {
-    return { error: "Recuperação de senha será habilitada após conectar o backend." };
+  const resetPassword: AuthContextValue["resetPassword"] = async (email) => {
+    const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/redefinir-senha` : undefined;
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    return { error: error?.message ?? null };
   };
 
   const signOut = async () => {
-    saveSession(null);
-    setUser(null);
-    setActiveRoleState(null);
-    setStatus("unauthenticated");
+    await supabase.auth.signOut();
+    if (typeof window !== "undefined") window.localStorage.removeItem(ACTIVE_ROLE_KEY);
   };
 
   return (
     <AuthContext.Provider
       value={{
         status,
+        session,
         user,
         activeRole,
         setActiveRole,

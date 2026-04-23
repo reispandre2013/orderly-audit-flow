@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RedefinirSenhaRouteImport } from './routes/redefinir-senha'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CadastroRouteImport } from './routes/cadastro'
@@ -33,6 +34,11 @@ import { Route as AppOrdensIndexRouteImport } from './routes/app.ordens.index'
 import { Route as AppOrdensNovaRouteImport } from './routes/app.ordens.nova'
 import { Route as AppOrdensOrdemIdRouteImport } from './routes/app.ordens.$ordemId'
 
+const RedefinirSenhaRoute = RedefinirSenhaRouteImport.update({
+  id: '/redefinir-senha',
+  path: '/redefinir-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
   '/app/aprovacoes': typeof AppAprovacoesRoute
   '/app/auditoria': typeof AppAuditoriaRoute
   '/app/documentos': typeof AppDocumentosRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
   '/app/aprovacoes': typeof AppAprovacoesRoute
   '/app/auditoria': typeof AppAuditoriaRoute
   '/app/documentos': typeof AppDocumentosRoute
@@ -205,6 +213,7 @@ export interface FileRoutesById {
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
   '/app/aprovacoes': typeof AppAprovacoesRoute
   '/app/auditoria': typeof AppAuditoriaRoute
   '/app/documentos': typeof AppDocumentosRoute
@@ -232,6 +241,7 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/login'
     | '/recuperar-senha'
+    | '/redefinir-senha'
     | '/app/aprovacoes'
     | '/app/auditoria'
     | '/app/documentos'
@@ -256,6 +266,7 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/login'
     | '/recuperar-senha'
+    | '/redefinir-senha'
     | '/app/aprovacoes'
     | '/app/auditoria'
     | '/app/documentos'
@@ -281,6 +292,7 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/login'
     | '/recuperar-senha'
+    | '/redefinir-senha'
     | '/app/aprovacoes'
     | '/app/auditoria'
     | '/app/documentos'
@@ -307,10 +319,18 @@ export interface RootRouteChildren {
   CadastroRoute: typeof CadastroRoute
   LoginRoute: typeof LoginRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
+  RedefinirSenhaRoute: typeof RedefinirSenhaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/redefinir-senha': {
+      id: '/redefinir-senha'
+      path: '/redefinir-senha'
+      fullPath: '/redefinir-senha'
+      preLoaderRoute: typeof RedefinirSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recuperar-senha': {
       id: '/recuperar-senha'
       path: '/recuperar-senha'
@@ -525,16 +545,8 @@ const rootRouteChildren: RootRouteChildren = {
   CadastroRoute: CadastroRoute,
   LoginRoute: LoginRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
+  RedefinirSenhaRoute: RedefinirSenhaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
